@@ -25,10 +25,13 @@ const cleanedPoem = poemIn => {
     }
   };
 
-  poemIn.words.forEach(entry => {
-    if (entry !== "") {
+  poemIn.words.forEach((entry,index) => {
+    // console.log(entry);
+    if (cleanedEntry(entry) === "" || cleanedEntry(entry) === " ") {
+      console.log(index,"-Empty string.");
+    } else {
       arrOut.wordsOut.push(cleanedEntry(entry));
-      console.log(cleanedEntry(entry));
+    //   console.log(cleanedEntry(entry));
     }
   });
   return arrOut;

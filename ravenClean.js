@@ -1,4 +1,5 @@
-const splitPoem = require("./ravenSplit.json");
+// const splitPoem = require("./ravenSplit.json");
+const splitPoem = require("./dreamSplit.json");
 
 const cleanedPoem = poemIn => {
   console.log(typeof poemIn);

@@ -1,49 +1,86 @@
-// const splitPoem = require("./ravenSplit.json");
-const splitPoem = require("./dreamSplit.json");
+const poem = require("./annabelLeeRaw.js");
+
+const splitPoem = poem.split(" ");
 
 const cleanedPoem = poemIn => {
-  console.log(typeof poemIn);
-  //   return poemIn.words[6];
   const arrOut = { wordsOut: [] };
 
   let cleanedEntry = entryIn => {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let tempEntry = "";
-    for (let i = 0; i < entryIn.length; i++) {
-      if (alphabet.indexOf(entryIn[i]) !== -1) {
-        tempEntry += entryIn[i];
-      }
-    }
+
     if (
-      tempEntry === "I" ||
-      tempEntry === "Lenore" ||
-      tempEntry === "December" ||
-      tempEntry === "Aidenn"
+      entryIn === "I" ||
+      entryIn === "Lenore" ||
+      entryIn === "December" ||
+      entryIn === "Aidenn" ||
+      entryIn === "Annabel" ||
+      entryIn === "Lee" ||
+      entryIn === "night-tide"
     ) {
-      return tempEntry;
+      return entryIn;
     } else {
+      let tempEntry = "";
+      for (let i = 0; i < entryIn.length; i++) {
+        if (alphabet.indexOf(entryIn[i]) !== -1) {
+          tempEntry += entryIn[i];
+        }
+      }
       return tempEntry.toLowerCase();
     }
   };
 
-  poemIn.words.forEach((entry,index) => {
-    // console.log(entry);
+  poemIn.forEach((entry, index) => {
     if (cleanedEntry(entry) === "" || cleanedEntry(entry) === " ") {
-      console.log(index,"-Empty string.");
+      // console.log(index, "-Empty string.");
+    } else if (cleanedEntry(entry) === "zzz") {
+      arrOut.wordsOut.push("");
     } else {
       arrOut.wordsOut.push(cleanedEntry(entry));
-    //   console.log(cleanedEntry(entry));
     }
   });
   return arrOut;
 };
 
-// console.log(cleanedPoem(splitPoem));
+const extractLastSyllable = wordIn => {
+  if (wordIn === "") {
+    return "--";
+  }
+  if (wordIn.length === 1) {
+    return wordIn;
+  }
 
+  const vowels = "aeiouy";
+  function isVowel(letter) {
+    return vowels.indexOf(letter) !== -1;
+  }
+
+  let lastSyl = wordIn[wordIn.length - 1];
+  const lastLetterIsVowel = isVowel(lastSyl);
+
+  for (let i = wordIn.length - 2; i >= 0; i--) {
+    if (
+      (isVowel(wordIn[i]) && lastLetterIsVowel) ||
+      (!isVowel(wordIn[i]) && !lastLetterIsVowel)
+    ) {
+      lastSyl = wordIn[i] + lastSyl;
+    } else {
+      lastSyl = wordIn[i] + lastSyl;
+      return lastSyl;
+    }
+  }
+};
+
+let splitAndCleaned = cleanedPoem(splitPoem);
+const poemByPairs = { wordPairs: [] };
+splitAndCleaned.wordsOut.forEach(entry => {
+  poemByPairs.wordPairs.push({ [entry]: extractLastSyllable(entry) });
+});
+
+console.log(poemByPairs);
 const fs = require("fs");
-let data = JSON.stringify(cleanedPoem(splitPoem));
+let data = JSON.stringify(poemByPairs);
 
-fs.writeFileSync("./ravenCleaned.json", data, function(err) {
+fs.writeFileSync("./annabelLeeCleaned.json", data, function(err) {
   if (err) {
     return console.log(err);
   }

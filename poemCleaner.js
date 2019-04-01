@@ -45,6 +45,9 @@ const extractLastSyllable = wordIn => {
   if (wordIn === "") {
     return "--";
   }
+  if (wordIn === "you") {
+    return "oo";
+  }
   if (wordIn.length === 1) {
     return wordIn;
   }
